@@ -1,9 +1,7 @@
 #include <iostream>
 using namespace std;
 
-/*
- * Reverses a dynamic array and prints both original and reversed arrays.
- */
+// Reverses a dynamic array and prints both arrays
 
 int* ReverseArray(const int arr[], int size);
 void printArray(const int arr[], int size);
@@ -36,4 +34,3 @@ int main() {
     delete[] reversed;
     return 0;
 }
-
