@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+
+/*
+ * Reverses a dynamic array and prints both original and reversed arrays.
+ */
+
+int* ReverseArray(const int arr[], int size);
+void printArray(const int arr[], int size);
+
+int* ReverseArray(const int arr[], int size) {
+    int* reversed = new int[size];
+    for (int i = 0; i < size; ++i)
+        reversed[i] = arr[size - 1 - i];
+    return reversed;
+}
+
+void printArray(const int arr[], int size) {
+    for (int i = 0; i < size; ++i)
+        cout << arr[i] << " ";
+    cout << endl;
+}
+
+int main() {
+    int original[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int size = sizeof(original) / sizeof(original[0]);
+
+    cout << "Original array:\n";
+    printArray(original, size);
+
+    int* reversed = ReverseArray(original, size);
+
+    cout << "Reversed array:\n";
+    printArray(reversed, size);
+
+    delete[] reversed;
+    return 0;
+}
+
