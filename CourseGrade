@@ -1,0 +1,86 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+// Reads student data, calculates average and grade, and prints report
+
+struct student {
+    string name;
+    int id;
+    double* testScores;
+    double avg;
+    char grade;
+};
+
+student* getData(ifstream& file, int& studentCnt, int& testsCnt);
+void calcAverage(student students[], int studentCnt, int testsCnt);
+void printReport(const student students[], int studentCnt);
+char getGrade(double avg);
+
+int main() {
+    ifstream file("STUDENT.txt");
+    if (!file) {
+        cerr << "Error opening file.\n";
+        return 1;
+    }
+
+    int studentCnt, testsCnt;
+    student* students = getData(file, studentCnt, testsCnt);
+
+    calcAverage(students, studentCnt, testsCnt);
+    printReport(students, studentCnt);
+
+    for (int i = 0; i < studentCnt; ++i)
+        delete[] students[i].testScores;
+    delete[] students;
+
+    return 0;
+}
+
+student* getData(ifstream& file, int& studentCnt, int& testsCnt) {
+    file >> studentCnt >> testsCnt;
+    student* students = new student[studentCnt];
+
+    for (int i = 0; i < studentCnt; ++i) {
+        file >> students[i].name >> students[i].id;
+        students[i].testScores = new double[testsCnt];
+        for (int j = 0; j < testsCnt; ++j)
+            file >> students[i].testScores[j];
+    }
+
+    return students;
+}
+
+void calcAverage(student students[], int studentCnt, int testsCnt) {
+    for (int i = 0; i < studentCnt; ++i) {
+        double total = 0;
+        for (int j = 0; j < testsCnt; ++j)
+            total += students[i].testScores[j];
+        students[i].avg = total / testsCnt;
+        students[i].grade = getGrade(students[i].avg);
+    }
+}
+
+char getGrade(double avg) {
+    if (avg >= 90) return 'A';
+    if (avg >= 80) return 'B';
+    if (avg >= 70) return 'C';
+    if (avg >= 60) return 'D';
+    return 'F';
+}
+
+void printReport(const student students[], int studentCnt) {
+    cout << left << setw(15) << "Name"
+         << setw(6) << "ID"
+         << setw(8) << "Avg"
+         << "Grade\n";
+    cout << "-------------------------------\n";
+
+    for (int i = 0; i < studentCnt; ++i)
+        cout << left << setw(15) << students[i].name
+             << setw(6) << students[i].id
+             << fixed << setprecision(2) << setw(8) << students[i].avg
+             << students[i].grade << endl;
+}
